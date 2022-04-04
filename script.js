@@ -3,6 +3,7 @@ var password = JSON.parse(window.localStorage.getItem("AutoJoomerPassword"));
 var year = JSON.parse(window.localStorage.getItem("AutoJoomerYear"));
 var branch = JSON.parse(window.localStorage.getItem("AutoJoomerBranch"));
 var batch = JSON.parse(window.localStorage.getItem("AutoJoomerBatch"));
+var earlyjoin = JSON.parse(window.localStorage.getItem("AutoJoomerearlyjoin"));
 var confirmation = JSON.parse(window.localStorage.getItem("AutoJoomerConfirmation"));
 
 if (year == "" || branch == "" || batch == "" || username == "" || password == "" || confirmation == null) {
@@ -65,6 +66,9 @@ function runningscript() {
 	var thatClassLink = [];
 	var thatClassName = [];
 	var millisOfThatClass = [];
+	var eho;
+	var emi;
+	earlyjoin =  parseInt(earlyjoin);
 	var day = now.getDay();
 	if (branch == "C")
 		br = "CSE";
@@ -100,6 +104,16 @@ function runningscript() {
 			var nooflec = Object.keys(thatDay).length;
 			for (let i = 1, j = 0; i < nooflec; i++, j++) {
 				let now = new Date();
+
+				//Convert Timezone to IST
+	
+				let utcOffset = now.getTimezoneOffset() * 60000;
+				let localTime = now.getTime();
+				let utc = localTime + utcOffset;
+				let istOffset = 5.5;  
+				let ist = utc + (3600000*istOffset);
+				now = new Date(ist);
+				
 				var thatClass = thatDay[i];
 
 				thatClassName[i] = thatClass['class_name'];
@@ -111,9 +125,20 @@ function runningscript() {
 				//parseint to convert string to integer
 				h[i] = thatClass['class_time'].substring(0, 2);
 				m[i] = thatClass['class_time'].substring(2, 4);
+				eho = thatClass['class_time'].substring(0, 2);
+				emi =  thatClass['class_time'].substring(2, 4);
+				//early join code
+				if(m[i]-earlyjoin>=0){
+					emi = m[i]-earlyjoin;
+					
+				}
+				else{
+					emi = m[i]-earlyjoin+60;
+					eho = h[i]-1;
+				}
 				console.log(thatClassName[i] + " " + thatClassLink[i].substring(thatClassLink[i].length - 22, thatClassLink[i].length - 18) + " " + h[i] + " " + m[i]);
-
-				millisOfThatClass[i] = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h[i]), parseInt(m[i]), 0, 0) - now;
+				millisOfThatClass[i] = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(eho), parseInt(emi), 0, 0) - now;
+				
 				if (millisOfThatClass[i] > 0) {
 					timeouts[j] = setTimeout(function () {
 						if (confirmation == 1) {

@@ -3,20 +3,24 @@ var username;
 var password;
 var branch;
 var confirmation;
+var earlyjoin;
 window.onload = function () {
     populator();
+    // Click event listener for Login to Wi-Fi button
+    document.getElementById("wifiLogin").addEventListener("click", function () {
+        window.open("https://msftconnecttest.com/redirect"), "_blank"
+    });
     document.getElementById("button").addEventListener("click", saveValues);
     document.getElementById("button").innerHTML = "SAVE";
     document.getElementById("button").disabled = false;
-    branch.disabled = true;
-    batch.disabled = true;
     document.getElementById("year").addEventListener("change", function () {
-        branch.getElementsByTagName("option")[1].selected = true;
-        batch.getElementsByTagName("option")[0].selected = true;
         if (year.value == "2019") {
+            branch.getElementsByTagName("option")[1].selected = true;
+            batch.getElementsByTagName("option")[0].selected = true;
             branch.disabled = true;
             batch.disabled = true;
         } else {
+            branch.getElementsByTagName("option")[1].selected = true;
             batch.getElementsByTagName("option")[1].selected = true;
             branch.disabled = false;
             batch.disabled = false;
@@ -48,14 +52,16 @@ function saveValues() {
     username = document.getElementById("username");
     password = document.getElementById("password");
     branch = document.getElementById("branch");
+    earlyjoin = document.getElementById("earlyjoin");
     confirmation = document.getElementById("confirmation");
     document.getElementById("button").style.color = "white";
-    document.getElementById("button").innerHTML = "RESTART BROWSER";
+    document.getElementById("button").innerHTML = "Restart Browser";
     document.getElementById("button").disabled = true;
     var uname = username.value;
     var pass = password.value;
     var uyear = document.getElementById("year").value;
     var ubatch = document.getElementById("batch").value;
+    var ejoin = document.getElementById("earlyjoin").value;
 
     var bran = branch.value;
     if (document.getElementById("confirmation").checked)
@@ -67,6 +73,7 @@ function saveValues() {
     window.localStorage.setItem("AutoJoomerYear", JSON.stringify(uyear));
     window.localStorage.setItem("AutoJoomerBranch", JSON.stringify(bran));
     window.localStorage.setItem("AutoJoomerBatch", JSON.stringify(ubatch));
+    window.localStorage.setItem("AutoJoomerearlyjoin", JSON.stringify(ejoin));
     window.localStorage.setItem("AutoJoomerConfirmation", JSON.stringify(conf));
 }
 
@@ -76,6 +83,7 @@ function populator() {
     year = document.getElementById("year");
     branch = document.getElementById("branch");
     batch = document.getElementById("batch");
+    earlyjoin = document.getElementById("earlyjoin");
     confirmation = document.getElementById("confirmation");
     //setting the values
     if (JSON.parse(window.localStorage.getItem("AutoJoomerUsername")) != null)
@@ -92,6 +100,8 @@ function populator() {
         branch.value = JSON.parse(window.localStorage.getItem("AutoJoomerBranch"));
     if (JSON.parse(window.localStorage.getItem("AutoJoomerBatch")) != null)
         batch.value = JSON.parse(window.localStorage.getItem("AutoJoomerBatch"));
+    if (JSON.parse(window.localStorage.getItem("AutoJoomerearlyjoin")) != null)
+        earlyjoin.value = JSON.parse(window.localStorage.getItem("AutoJoomerearlyjoin"));
 
     if (JSON.parse(window.localStorage.getItem("AutoJoomerConfirmation")) == 1)
         confirmation.checked = true;
